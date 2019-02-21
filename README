@@ -1,0 +1,67 @@
+This software is intended for the solution of nonlinear eigenvalue problems
+of the type
+  
+   [ K - lambda*M + i*sum( f_k(lambda)*W_k ) ]*x = 0
+
+where k=1,2,...,NT, i = sqrt(-1), and K, M, W_k are real matrices. Pade 
+approximants are used for the construction of an equivalent linear 
+eigenvalue problem, which is then solved with ARPACK and SuperLU 
+(shift-and-invert mode). With the exception of ARPACK (and
+residuals), all computations are performed in real arithmetic.
+
+The software has been customized to solve the problem
+
+   [ K- lambda*M +
+         i*sqrt(lambda-(sigma_1)^2)*W_1 +
+         i*sqrt(lambda-(sigma_2)^2)*W_2 ]*x = 0
+
+which appears in the study of linear accelerator cavities, 
+where i = sqrt(-1), and K, M, W_1 and W_2 are real matrices.
+
+Directories:
+
+  DATA: test cases
+  INPUT: input files (parameters for the test cases)  
+  INSTALL:  
+  SRC: source files
+
+Input files:
+
+  Each input file should contain, in this order:
+
+  file where the matrix K   will be read from
+  file where the matrix M   will be read from
+  file where the matrix W_1 will be read from
+  file where the matrix W_2 will be read from
+  sigma_1
+  sigma_2
+  sigma_P (expansion point of Pade approximants)
+  sigma (translation of origin, not necessarily equal to sigma_P)
+  p_1 (order of the polynomials in the rational function associated to W_1)
+  p_2 (order of the polynomials in the rational function associated to W_2)
+  number of eigenpairs to be computed
+
+Installation:
+
+  The program has been compiled/tested with the gnu and intel compilers. Specifics 
+  are given in make.inc.gcc and make.inc.icc. One of those files needs to be copied 
+  into make.inc, and modified to point to the installations of LAPACK, BLAS, 
+  SuperLU and ARPACK.
+
+Testing:
+   
+  Once succesfully compiled, one can do 
+
+     main.exe < input_a.dat
+
+  to check the integrity of the installation. 
+
+Assumptions/restrictions:
+
+- The matrix K, M, W_k are stored in COO format, with indices starting
+  at 1 (adjustmens to 0 are done internally).
+- K and M must have the same sparse pattern. 
+- Low-rank approximations for W_k are computed with LAPACK's dgeqp3/dorgqr; 
+  a cutoff is used to determine the rank of W_k. (To be implemented: a
+  more robust strategy to determine the rank of W.) 
+- Currently, sigma=sigma_P and p_1=p_2
