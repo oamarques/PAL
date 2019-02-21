@@ -52,7 +52,7 @@ Testing:
    
   Once succesfully compiled, one can do 
 
-     main.exe < input_a.dat
+     main_PAL.x < INPUT/input_a.dat
 
   to check the integrity of the installation. 
 
