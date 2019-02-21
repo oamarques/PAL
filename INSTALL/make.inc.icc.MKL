@@ -1,0 +1,36 @@
+# intel compilers
+
+# LAPACK and BLAS libraries
+MKLLIB = $(MKLPATH)/libmkl_intel_lp64.a \
+	 $(MKLPATH)/libmkl_core.a \
+	 $(MKLPATH)/libmkl_sequential.a
+BLASLIB   = -Wl,--start-group $(MKLLIB) -Wl,--end-group -lpthread -lm
+LAPACKLIB = -L$(HOME)/LIB/LAPACK/3.6.0 -llapack_ifort
+
+# SuperLU library
+SUPERLUDIR = $(HOME)/LIB/SuperLU/5.2.1
+SUPERLULIB = -L$(SUPERLUDIR) -lsuperlu_icc
+SUPERLUINC = -I$(SUPERLUDIR)/SRC 
+
+# ARPACK library
+ARPACKDIR = $(HOME)/LIB/ARPACK
+ARPACKLIB = -L$(ARPACKDIR) -larpack_ifort
+ARPACKINC = -I$(ARPACKDIR)/SRC
+
+LIBS      = $(SUPERLULIB) $(ARPACKLIB) $(LAPACKLIB) $(BLASLIB) 
+INCS      = $(SUPERLUINC) $(ARPACKINC)
+
+CC        = icc
+CFLAGS    = $(DEFS) -O2 -fp-model strict -Wunused-variable
+
+FC        = ifort
+FFLAGS    = -O2 -fp-model strict -warn unused
+
+LOADER    = $(CC)
+LDFLAGS   = -limf -lifcore # -nofor_main
+
+ARCH      = ar
+ARCHFLAGS = cr
+RANLIB    = ranlib
+
+RM        = rm -f
